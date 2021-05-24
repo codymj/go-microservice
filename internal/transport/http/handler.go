@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -18,10 +19,12 @@ func NewHandler() *Handler {
 
 // SetupRoutes sets up routing for the application
 func (h *Handler) SetupRoutes() {
-	fmt.Println("Initializing routes...")
+	log.Println("Initializing routes...")
 
 	h.Router = mux.NewRouter()
 	h.Router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "OK")
 	})
+
+	log.Println("Routes initialized")
 }
