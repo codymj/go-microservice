@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"os"
 )
