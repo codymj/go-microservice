@@ -8,7 +8,7 @@ import (
 )
 
 // App contains things for the app to work
-type App struct {}
+type App struct{}
 
 // Run initializes the application
 func (app *App) Run() error {
