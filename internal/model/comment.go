@@ -13,6 +13,11 @@ type Comment struct {
 	Modified time.Time `json:"modified"`
 }
 
+// GetCommentsQuery returns query for getting all comments from db
+func (c *Comment) GetCommentsQuery() string {
+	return `SELECT * FROM comments;`
+}
+
 // GetCommentQuery returns query for getting a single comment from db
 func (c *Comment) GetCommentQuery() string {
 	return `SELECT * FROM comments WHERE id=$1;`

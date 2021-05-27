@@ -26,6 +26,32 @@ type CommentService interface {
 	DeleteComment(id uint) error
 }
 
+// GetComments returns an array of comments
+func (s *Service) GetComments() ([]model.Comment, error) {
+	var comments []model.Comment
+	var comment model.Comment
+
+	query := comment.GetCommentsQuery()
+	rows, err := s.DB.Query(query, nil)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err = rows.Scan(
+			&comment.ID, &comment.Body, &comment.Author,
+			&comment.Created, &comment.Modified,
+		)
+		if err != nil {
+			panic(err)
+		}
+		comments = append(comments, comment)
+	}
+
+	return comments, nil
+}
+
 // GetComment returns a single comment
 func (s *Service) GetComment(id uint) (model.Comment, error) {
 	var comment model.Comment

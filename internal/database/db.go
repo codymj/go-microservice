@@ -26,7 +26,8 @@ func Init() (Database, error) {
 
 	db := Database{}
 	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable connect_timeout=5",
+		"host=%s port=%s user=%s password=%s dbname=%s "+
+			"sslmode=disable connect_timeout=5",
 		HOST, PORT, USER, PASS, DB,
 	)
 	conn, err := sql.Open("postgres", dsn)
