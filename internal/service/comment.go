@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"time"
 )
 
 // Service provides database access for a service
@@ -34,9 +35,8 @@ func (s *Service) GetComments() ([]model.Comment, error) {
 	query := comment.GetCommentsQuery()
 	rows, err := s.DB.Query(query, nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	defer rows.Close()
 
 	for rows.Next() {
 		err = rows.Scan(
@@ -44,7 +44,7 @@ func (s *Service) GetComments() ([]model.Comment, error) {
 			&comment.Created, &comment.Modified,
 		)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		comments = append(comments, comment)
 	}
@@ -72,4 +72,44 @@ func (s *Service) GetComment(id uint) (model.Comment, error) {
 	default:
 		panic(err)
 	}
+}
+
+// CreateComment creates a comment
+func (s *Service) CreateComment(comment model.Comment) (model.Comment, error) {
+	query := comment.CreateCommentQuery()
+	_, err := s.DB.Exec(
+		query, &comment.Body, &comment.Author, time.Now(), time.Now(),
+	)
+	if err != nil {
+		log.Println("Error creating comment")
+		return comment, err
+	}
+
+	return comment, nil
+}
+
+// UpdateComment updates a comment
+func (s *Service) UpdateComment(id uint, comment model.Comment) (model.Comment, error) {
+	query := comment.UpdateCommentQuery()
+	_, err := s.DB.Exec(query, id, &comment.Body, &comment.Author, time.Now())
+	if err != nil {
+		log.Println("Error updating comment")
+		return comment, err
+	}
+
+	return comment, nil
+}
+
+// DeleteComment deletes a comment
+func (s *Service) DeleteComment(id uint) error {
+	var comment model.Comment
+
+	query := comment.DeleteCommentQuery()
+	_, err := s.DB.Exec(query, id)
+	if err != nil {
+		log.Println("Error deleting comment")
+		return err
+	}
+
+	return nil
 }
